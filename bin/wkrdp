@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby 
+# wkrdp: worker RDP
+#        Opens a remote desktop connection to an amazon worker.
+# Usage: wkrdp --list|-l || --conn|-c || --help|-h
+# Options:
+# --conn, -c : connect to instance id
+# --list, -l : list worker instances
+# --help, -h : show help
+
+$LOAD_PATH.push File.join(File.dirname(__FILE__), "..", "lib") 
+require 'wkrdp' 
+
+runner = Janova::Wkrdp::App.new(ARGV)
+runner.run
