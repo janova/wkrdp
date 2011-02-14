@@ -1,0 +1,4 @@
+This program can list Amazon EC2 worker instances in
+preprod and production.
+
+It can also launch CoRD if passed an amazon instance id.
