@@ -8,9 +8,6 @@ module Janova
         @options = Options.new(argv)
         @log = Logger.new(STDOUT)
         @log.level = Logger::WARN
-        # TODO: Change environment variables to AMAZON_ACCESS_KEY_ID
-        # and AMAZON_SECRET_ACCESS_KEY for compatibility with 
-        # the official amazon-ec2 gem.
         @access_key_id = ENV['AMAZON_ACCESS_KEY_ID']
         @secret_access_key = ENV['AMAZON_SECRET_ACCESS_KEY']
         @worker_password = ENV['WORKER_PASSWORD']
@@ -51,7 +48,7 @@ module Janova
           log_snapshot.run
           exit 0
         end
-      end 
+      end
     end
   end
 end
