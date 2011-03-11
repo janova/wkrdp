@@ -1,4 +1,18 @@
 This program can list Amazon EC2 worker instances in
-preprod and production.
+staging, demo, preprod and production.
 
 It can also launch CoRD if passed an amazon instance id.
+
+Finally, it can also take a snapshot of logs from all
+instances in a group (ie, production).
+
+TODO: Switch from the right_aws and right_http_connection 
+gems to amazon-ec2.
+AMI Info from amazon-ec2 gem.
+ree-1.8.7-2010.02 :013 > @ec2.describe_images(:owner_id => ['self'])['imagesSet']['item'].first['imageId']
+ => "ami-1d53ba74" 
+ree-1.8.7-2010.02 :014 > @ec2.describe_images(:owner_id => ['self'])['imagesSet']['item'].first['imageLocation']
+ => "janova.us/staging/rabbit/image.manifest.xml" 
+ree-1.8.7-2010.02 :015 > 
+
+

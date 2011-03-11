@@ -2,32 +2,31 @@ module Janova
   module Wkrdp
     class App
 
+      attr_reader :ssh_key
+
       def initialize(*argv)
-        @options = Options.new(argv)    
-        @access_key_id = ENV['AWS_ACCESS_KEY_ID']
-        @secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
-        if @access_key_id.nil? || @secret_access_key.nil?
-          puts 'AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY environment variables not set. Exiting.'
+        @options = Options.new(argv)
+        @log = Logger.new(STDOUT)
+        @log.level = Logger::WARN
+        @access_key_id = ENV['AMAZON_ACCESS_KEY_ID']
+        @secret_access_key = ENV['AMAZON_SECRET_ACCESS_KEY']
+        @worker_password = ENV['WORKER_PASSWORD']
+        @ssh_key = ENV['BRIANL_SSH_KEY_PATH']
+        if @access_key_id.nil? || @secret_access_key.nil? || @worker_password.nil? || @ssh_key.nil?
+          puts 'AMAZON_ACCESS_KEY_ID, AMAZON_SECRET_ACCESS_KEY, WORKER_PASSWORD, or BRIANL_SSH_KEY_PATH environment variable(s) not set. Exiting.'
           exit 1
         end
       end
-    
+
       def run
-        ec2 = RightAws::Ec2.new(@access_key_id, @secret_access_key)
-        puts 'wkrdp:'
+        ec2 = RightAws::Ec2.new(@access_key_id, @secret_access_key, :logger => @log)
         if @options.list
-          puts "Here is a list of worker instances."
-          running_windows_instances = ec2.describe_instances.select {|i| i[:aws_platform] == 'windows' && i[:aws_state] == 'running'}
-          preprod_instances = running_windows_instances.select {|i| i[:aws_groups].include? 'preprod'}
-          prod_instances = running_windows_instances.select {|i| i[:aws_groups].include? 'worker_production'}
-          puts "preprod:"
-          preprod_instances.each {|i| puts "#{i[:aws_instance_id]} #{i[:aws_launch_time]} #{i[:dns_name]}"}
-          puts "production:"
-          prod_instances.each {|i| puts "#{i[:aws_instance_id]} #{i[:aws_launch_time]} #{i[:dns_name]}"}
+          list = List.new(ec2, @options)
+          list.run
           exit 0
         end
         if @options.instance_id
-          instance = ec2.describe_instances.select {|i| i[:aws_instance_id] =~ /^#{@options.instance_id}/}
+          instance = ec2.describe_instances.select {|i| i[:aws_instance_id] =~ /^i-#{@options.instance_id}/}
           if instance.size > 1
             puts "Ambiguous aws_instance_id. Exiting."
             exit 1
@@ -37,14 +36,19 @@ module Janova
             exit 1
           end
           instance = instance.first
-          command = "open rdp://administrator:esacegde@#{instance[:dns_name]}"
+          command = "open rdp://administrator:#{@worker_password}@#{instance[:dns_name]}"
           puts "Here is the string to connect to your worker."
           puts command
           exec(command) if fork == nil
           Process.wait
           exit 0
         end
-      end 
+        if @options.snap_env
+          log_snapshot = LogSnapshot.new(ec2, @options)
+          log_snapshot.run
+          exit 0
+        end
+      end
     end
   end
 end

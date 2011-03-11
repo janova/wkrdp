@@ -5,6 +5,7 @@
 # Options:
 # --conn, -c : connect to instance id
 # --list, -l : list worker instances
+# --snap, -s : take snapshot of worker logs
 # --help, -h : show help
 
 $LOAD_PATH.push File.join(File.dirname(__FILE__), "..", "lib") 
