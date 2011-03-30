@@ -7,6 +7,7 @@ require 'list'
 require 'log_snapshot'
 require 'instance_group'
 require 'instance_identifier'
+require 'net/scp'
 
 class Net::HTTP
   alias_method :old_initialize, :initialize
