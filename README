@@ -15,4 +15,24 @@ ree-1.8.7-2010.02 :014 > @ec2.describe_images(:owner_id => ['self'])['imagesSet'
  => "janova.us/staging/rabbit/image.manifest.xml" 
 ree-1.8.7-2010.02 :015 > 
 
+Instance info.
+@ec2.describe_instances(:owner_id => ['self'])['reservationSet']['item'] => an array of reservations
+@ec2.describe_instances(:owner_id => ['self'])['reservationSet']['item'].first['groupSet']['item'].first['groupId']
+ => aws_group = "rabbit"
+@ec2.describe_instances(:owner_id => ['self'])['reservationSet']['item'].first['instancesSet']['item'].first['instanceId']
+ => instanceId = "i-4f1e3d24"
+@ec2.describe_instances(:owner_id => ['self'])['reservationSet']['item'].first['instancesSet']['item'].first['launchTime']
+ => launchTime = "2010-05-20T19:06:46.000Z"
+@ec2.describe_instances(:owner_id => ['self'])['reservationSet']['item'].first['instancesSet']['item'].first['privateIpAddress']
+ => privateIpAddress = "10.245.222.255"
+@ec2.describe_instances(:owner_id => ['self'])['reservationSet']['item'].first['instancesSet']['item'].first['ipAddress']
+ => ipAddress = "174.129.130.142"
+@ec2.describe_instances(:owner_id => ['self'])['reservationSet']['item'].first['instancesSet']['item'].first['instanceState']['name']
+ => "running"
+@ec2.describe_instances(:owner_id => ['self'])['reservationSet']['item'].first['instancesSet']['item'].first['imageId']
+ => "ami-3ecc2e57"
 
+@ec2.describe_images(:owner_id => ['self'])['imagesSet']['item'][2]['imageId']
+ => "ami-22c2304b"
+@ec2.describe_images(:owner_id => ['self'])['imagesSet']['item'][2].platform
+ => "windows"
