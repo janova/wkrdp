@@ -10,16 +10,38 @@ class LogSnapshot
   def run
     output = ''
     running_windows_instances = @ec2.describe_instances.select {|i| i[:aws_platform] == 'windows' && i[:aws_state] == 'running'}
-    remote_commands = []
     if WORKER_ENVIRONMENTS.include?(@options.snap_env)
       instances = InstanceGroup.new(running_windows_instances).filter("worker_#{@options.snap_env}")
-      remote_commands = instances.map{|i| "ssh -i #{ENV['BRIANL_SSH_KEY_PATH']} -l Administrator #{i[:dns_name]} '/usr/bin/cat /cygdrive/c/shared/log/worker.log'"}
+      date = date_for_filename
+      instances.each do |i| 
+        copy_log_for_instance_dated(i, date)
+        output << add_output_message(i, date)
+      end
     else
       i = InstanceIdentifier.find_unique(@ec2, @options.snap_env)
-      remote_commands << "ssh -i #{ENV['BRIANL_SSH_KEY_PATH']} -l Administrator #{i[:dns_name]} '/usr/bin/cat /cygdrive/c/shared/log/worker.log'"
+      date = date_for_filename
+      copy_log_for_instance_dated(i, date)
+      output << add_output_message(i, date)
     end
-    remote_commands.each{|c| output << %x{#{c}} }
     puts output
+  end
+
+  def add_output_message(i, date)
+    "#{i[:aws_instance_id][/^i-(.*)/, 1]}'s log copied to #{addressed_dated_filename(i[:ip_address], date)}.\n"
+  end
+
+  def copy_log_for_instance_dated(i, date)
+    Net::SCP.start(i[:dns_name], 'Administrator', {:keys => [ENV['BRIANL_SSH_KEY_PATH']]}) do |scp|
+      scp.download!("/c/shared/log/worker.log", addressed_dated_filename(i[:ip_address], date))
+    end
+  end
+
+  def addressed_dated_filename(address, date=nil)
+    "#{date ? date : date_for_filename}--#{address}.log"
+  end
+
+  def date_for_filename
+    Time.now.strftime("%Y%m%d-%H%M%S")
   end
 
 end

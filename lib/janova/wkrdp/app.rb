@@ -44,8 +44,11 @@ module Janova
           exit 0
         end
       rescue Exception => e
-        puts "#{e.class}: #{e}"
-        exit 1
+        unless e.class == SystemExit # Allow exit 0 to exit normally.
+          puts "#{e.class}: #{e}"
+          puts e.backtrace
+          exit 1
+        end
       end
     end
   end
