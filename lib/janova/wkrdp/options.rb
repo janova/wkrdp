@@ -13,6 +13,7 @@ Options:
 --snap, -s : take snapshot of worker logs
 --help, -h : show help
 ENDOFUSAGE
+      EXCLUSIVE_OPTS = [:@instance_id, :@list, :@snap_env]
 
       require 'getoptlong'
 
@@ -44,10 +45,12 @@ ENDOFUSAGE
           puts USAGE
           exit 1
         end
-        if @instance_id && @list
-          puts "--conn and --list are exclusive options. Choose only one."
-          puts USAGE
-          exit 1
+      end
+
+      def validate
+        exclusive_opts_count = EXCLUSIVE_OPTS.count{|o| instance_variable_get(o)}
+        if exclusive_opts_count > 1
+          raise ArgumentError, "You specified too more than one exclusive option. Specify only one."
         end
       end
 
