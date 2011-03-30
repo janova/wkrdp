@@ -43,6 +43,9 @@ module Janova
           log_snapshot.run
           exit 0
         end
+      rescue Exception => e
+        puts "#{e.class}: #{e}"
+        exit 1
       end
     end
   end
