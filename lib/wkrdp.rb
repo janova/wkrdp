@@ -6,6 +6,7 @@ require 'right_aws'
 require 'list'
 require 'log_snapshot'
 require 'instance_group'
+require 'instance_identifier'
 
 class Net::HTTP
   alias_method :old_initialize, :initialize

@@ -30,16 +30,7 @@ module Janova
           exit 0
         end
         if @options.instance_id
-          instance = ec2.describe_instances.select {|i| i[:aws_instance_id] =~ /^i-#{@options.instance_id}/}
-          if instance.size > 1
-            puts "Ambiguous aws_instance_id. Exiting."
-            exit 1
-          end
-          if instance.size < 1
-            puts "aws_instance_id not found. Exiting."
-            exit 1
-          end
-          instance = instance.first
+          instance = InstanceIdentifier.find_unique(ec2, @options.instance_id)
           command = "open rdp://administrator:#{@worker_password}@#{instance[:dns_name]}"
           puts "Here is the string to connect to your worker."
           puts command
