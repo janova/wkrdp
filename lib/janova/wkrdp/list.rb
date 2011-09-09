@@ -11,16 +11,19 @@ class List
 
     staging_instances = InstanceGroup.new(running_windows_instances).filter('worker_staging')
     demo_instances    = InstanceGroup.new(running_windows_instances).filter('worker_demo')
+    qa_instances      = InstanceGroup.new(running_windows_instances).filter('worker_qa')
     preprod_instances = InstanceGroup.new(running_windows_instances).filter('worker_preprod')
     prod_instances    = InstanceGroup.new(running_windows_instances).filter('worker_production')
 
-    output << "staging:\n"
+    output << "staging: #{staging_instances.length}\n"
     output << display_filter(staging_instances)
-    output << "\ndemo:\n"
+    output << "\ndemo: #{demo_instances.length}\n"
     output << display_filter(demo_instances)
-    output << "\npreprod:\n"
+    output << "\nqa: #{qa_instances.length}\n"
+    output << display_filter(qa_instances)
+    output << "\npreprod: #{preprod_instances.length}\n"
     output << display_filter(preprod_instances)
-    output << "\nproduction:\n"
+    output << "\nproduction: #{prod_instances.length}\n"
     output << display_filter(prod_instances)
     puts output
   end
