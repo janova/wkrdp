@@ -1,6 +1,6 @@
 class LogSnapshot
 
-  WORKER_ENVIRONMENTS = %w(staging demo preprod production)
+  WORKER_ENVIRONMENTS = %w(staging demo preprod production qa)
 
   def initialize(ec2, options)
     @ec2 = ec2
