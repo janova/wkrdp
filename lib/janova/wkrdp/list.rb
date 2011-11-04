@@ -25,7 +25,17 @@ class List
     output << display_filter(preprod_instances)
     output << "\nproduction: #{prod_instances.length}\n"
     output << display_filter(prod_instances)
+    output << display_counts(staging_instances, qa_instances, demo_instances, preprod_instances, prod_instances)
     puts output
+  end
+
+  def display_counts(staging_instances, qa_instances, demo_instances, preprod_instances, prod_instances)
+    output = "\n========= EC2 Worker Counts sponsored by RS =========\n"
+    output << "    Staging: #{staging_instances.count.to_i}\n"
+    output << "         QA: #{qa_instances.count.to_i}\n"
+    output << "       Demo: #{demo_instances.count.to_i}\n"
+    output << "    PreProd: #{preprod_instances.count.to_i}\n"
+    output << "       Prod: #{prod_instances.count.to_i}\n"
   end
 
   def display_filter(instances)
