@@ -4,6 +4,7 @@
 # Usage: wkrdp --list|-l || --conn|-c || --help|-h
 # Options:
 # --conn, -c : connect to instance id
+# --env,  -e : list worker instances of a given environment
 # --list, -l : list worker instances
 # --snap, -s : take snapshot of worker logs
 # --help, -h : show help
