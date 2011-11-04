@@ -39,7 +39,7 @@ class List
   end
 
   def display_filter(instances)
-    output = instances.map {|i| "#{i[:aws_instance_id].sub(/^i-/, '')}   #{i[:aws_launch_time].sub(/\.000Z/, '').sub(/T/, ' ')}   #{i[:private_ip_address].ljust(14)}   #{i[:ip_address].ljust(15)}" }
+    output = instances.map {|i| "#{i[:aws_instance_id].sub(/^i-/, '')}   #{i[:aws_launch_time].sub(/\.000Z/, '').sub(/T/, ' ')}   #{i[:private_ip_address].ljust(14)}   #{i[:ip_address].ljust(15)}   #{i[:aws_image_id]}" }
     output.join("\n")
   end
 end
