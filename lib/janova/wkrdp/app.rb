@@ -29,6 +29,11 @@ module Janova
           list.run
           exit 0
         end
+        if @options.list_env
+          list_env = ListEnv.new(ec2, @options)
+          list_env.run
+          exit 0
+        end
         if @options.instance_id
           instance = InstanceIdentifier.find_unique(ec2, @options.instance_id)
           command = "open rdp://administrator:#{@worker_password}@#{instance[:dns_name]}"
